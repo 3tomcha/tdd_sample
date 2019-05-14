@@ -18,9 +18,13 @@ use Illuminate\Http\Request;
 // });
 Route::get('customers', function(){});
 Route::post('customers', function(\Illuminate\Http\Request $request){
+  if ( !$request->json('name') ) {
+  // if (  $request->json('name') === null) {
+      return response()->json([], \Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+  }
   $customer = new \App\Customer();
   $customer->name = $request->json('name');
-  
+  $customer->save();
 });
 
 Route::get('customers/{customer_id}', function(){});
