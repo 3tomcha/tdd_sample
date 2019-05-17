@@ -41,7 +41,7 @@ class ApiController extends Controller
 
 public function getCustomer($customer_id, CustomerService $customer_service)
 {
-  if (! \App\Customer::find($customer_id)) {
+  if (! $customer_service->exists($customer_id)) {
     abort(Response::HTTP_NOT_FOUND);
   }
   $customer = $customer_service->getCustomer($customer_id);
@@ -50,7 +50,10 @@ public function getCustomer($customer_id, CustomerService $customer_service)
 
 public function postCustomer(Request $request, $customer_id, CustomerService $customer_service)
 {
-  // $customer = $customer_service->updateCustomer($customer_id, $request->input('name'));
+  if (! $customer_service->exists($customer_id)) {
+    abort(Response::HTTP_NOT_FOUND);
+  }
+  $customer = $customer_service->updateCustomer($customer_id, $request->input('name'));
 }
 
 public function deleteCustomer()

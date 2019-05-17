@@ -19,15 +19,6 @@ class ReportTest extends TestCase
   }
 
 
-  /**
-  * @test
-  */
-  public function api_customers_customeridに存在しないidでGETメソッドでアクセスできると404エラーになる()
-  {
-    $response = $this->get('api/customers/10000');
-    $response->assertStatus(Response::HTTP_NOT_FOUND);
-  }
-
 
   /**
   * @test
@@ -53,12 +44,32 @@ class ReportTest extends TestCase
   /**
   * @test
   */
+  public function api_customers_customeridに存在しないidでGETメソッドでアクセスできると404エラーになる()
+  {
+    $response = $this->get('api/customers/10000');
+    $response->assertStatus(Response::HTTP_NOT_FOUND);
+  }
+
+  /**
+  * @test
+  */
   public function api_customers_customeridにGETメソッドでアクセスできる()
   {
     $response = $this->get('api/customers/1');
     $response->assertStatus(200);
   }
 
+
+  /**
+  * @test
+  */
+  public function api_customers_customeridに存在しないidでPUTメソッドでアクセスできると404エラーになる()
+  {
+    $response = $this->put('api/customers/10000');
+    $response->assertStatus(Response::HTTP_NOT_FOUND);
+  }
+
+  
   /**
   * @test
   */

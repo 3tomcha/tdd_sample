@@ -21,12 +21,18 @@ class CustomerService
     return Customer::find($id, ['id','name']);
   }
 
-  public function updateCustomer($id, $name){
+  public function updateCustomer($id, $name)
+  {
     $customer = new Customer;
     if($name){
       $customer->id = $customer_id;
       $customer->name = $name;
       $customer->save();
     }
+  }
+
+  public function exists($customer_id)
+  {
+    return Customer::find($customer_id);
   }
 }
