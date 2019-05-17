@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 
 class ReportTest extends TestCase
 {
@@ -13,8 +14,20 @@ class ReportTest extends TestCase
   public function setUp()
   {
     parent::setUp();
-    $this->artisan('db:seed',['--class' => 'TestDataSeeder']);
+    $this->artisan('migrate:fresh');
+    $this->artisan('db:seed');
   }
+
+
+  /**
+  * @test
+  */
+  public function api_customers_customeridに存在しないidでGETメソッドでアクセスできると404エラーになる()
+  {
+    $response = $this->get('api/customers/10000');
+    $response->assertStatus(Response::HTTP_NOT_FOUND);
+  }
+
 
   /**
   * @test
@@ -166,5 +179,24 @@ class ReportTest extends TestCase
     $params = ['name' => ''];
     $response = $this->postJson('api/customers', $params);
     $response->assertStatus(\Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+  }
+
+  /**
+  * @test
+  */
+  public function POST_api_customersのエラーレスポンスの確認()
+  {
+    $params = ['name' => ''];
+    $response = $this->postJson('api/customers', $params);
+
+    $error_response = [
+      'errors' => [
+        'name' => [
+          'name は必須項目です'
+        ]
+      ],
+      'message' => 'The given data was invalid.'
+    ];
+    $response->assertExactJson($error_response);
   }
 }
